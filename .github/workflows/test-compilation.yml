@@ -14,7 +14,7 @@ jobs:
       matrix:
         compiler: [ "gcc", "llvm" ]
         llvm-version: [ "12.0.1", "13.0.1", "14.0.0", "15.0.6" ]
-         exclude:
+        exclude:
           - llvm-version: "12.0.1"
           - llvm-version: "13.0.1"
         include:
