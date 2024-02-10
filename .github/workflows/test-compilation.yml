@@ -8,12 +8,15 @@ on:
 
 
 jobs:
-  build1:
+  build_ubuntu_20_04:
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
         llvm-version: [ "12.0.1", "13.0.1", "14.0.0", "15.0.6" ]
+        exclude:
+          - llvm-version: 12.0.1
+          - llvm-version: 13.0.1
 
     steps:
     - uses: actions/checkout@v3
@@ -31,12 +34,17 @@ jobs:
       run: |
         cm run script --tags=get,qaic,software,kit,_repo.https://github.com/${{ github.repository }},_branch.${{ github.ref_name }} --adr.compiler.tags=llvm --adr.compiler.version=${{ matrix.llvm-version }} --quiet
 
-  build2:  
+  build_ubuntu_22_04:  
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
         llvm-version: [ "14.0.0", "15.0.6", "16.0.4", "17.0.6" ]
+        exclude:
+          - llvm-version: 14.0.0
+          - llvm-version: 15.0.6
+          - llvm-version: 16.0.4
+          - llvm-version: 17.0.6
 
     steps:
     - uses: actions/checkout@v3
