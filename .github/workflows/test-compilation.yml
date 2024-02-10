@@ -12,11 +12,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        compilers: [ "gcc", "llvm" ]
+        compiler: [ "gcc", "llvm" ]
         llvm-version: [ "12.0.1", "13.0.1", "14.0.0", "15.0.6" ]
         include:
           - llvm-version: ""
-            compiler: gcc
+            compiler: "gcc"
+          - llvm-version: "14.0.0"
+            compiler: "llvm"
+          - llvm-version: "15.0.6"
+            compiler: "llvm"
 
     steps:
     - uses: actions/checkout@v3
