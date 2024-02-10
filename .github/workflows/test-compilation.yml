@@ -15,12 +15,15 @@ jobs:
         compiler: [ "gcc", "llvm" ]
         llvm-version: [ "12.0.1", "13.0.1", "14.0.0", "15.0.6" ]
         include:
-          - llvm-version: ""
+          - llvm-version: " "
             compiler: "gcc"
           - llvm-version: "14.0.0"
             compiler: "llvm"
           - llvm-version: "15.0.6"
             compiler: "llvm"
+        exclude:
+          - llvm-version: "12.0.1"
+          - llvm-version: "13.0.1"
 
     steps:
     - uses: actions/checkout@v3
@@ -40,8 +43,5 @@ jobs:
           PUSH_REPO: ${{ github.repository }}
           llvm_version: ${{ matrix.llvm-version }}
       run: |
-        [[ -n ${PULL_REPO} ]] || [[ -z ${llvm_version} ]] || cm run script --tags=get,qaic,software,kit,_repo.https://github.com/${{ github.repository }},_branch.${{ github.ref_name }} --adr.compiler.tags=${{ matrix.compiler }} --adr.compiler.version=${{ matrix.llvm-version }} --quiet
-        [[ -n ${PUSH_REPO} ]] || [[ -z ${llvm_version} ]] || cm run script --tags=get,qaic,software,kit,_repo.${{ github.event.pull_request.head.repo.html_url }},_branch.${{ github.event.pull_request.head.ref }} --adr.compiler.tags=llvm --adr.compiler.version=${{ matrix.llvm-version }} --quiet
-    
-        [[ -n ${{ github.event.pull_request.head.repo.html_url }} ]] || [[ -n ${llvm_version} ]] || cm run script --tags=get,qaic,software,kit,_repo.https://github.com/${{ github.repository }},_branch.${{ github.ref_name }} --adr.compiler.tags=gcc --quiet
-        [[ -n ${{ github.repository }} ]] || [[ -n ${llvm_version} ]] || cm run script --tags=get,qaic,software,kit,_repo.${{ github.event.pull_request.head.repo.html_url }},_branch.${{ github.event.pull_request.head.ref }} --adr.compiler.tags=gcc --quiet
+        [[ -n ${PULL_REPO} ]] || [[ -z $llvm_version ]] || cm run script --tags=get,qaic,software,kit,_repo.https://github.com/${{ github.repository }},_branch.${{ github.ref_name }} --adr.compiler.tags=${{ matrix.compiler }} --adr.compiler.version=${{ matrix.llvm-version }} --quiet
+        [[ -n ${PUSH_REPO} ]] || [[ -z $llvm_version ]] || cm run script --tags=get,qaic,software,kit,_repo.${{ github.event.pull_request.head.repo.html_url }},_branch.${{ github.event.pull_request.head.ref }} --adr.compiler.tags=llvm --adr.compiler.version=${{ matrix.llvm-version }} --quiet
