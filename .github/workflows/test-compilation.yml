@@ -30,9 +30,12 @@ jobs:
         cm run script --tags=get,sys-utils-cm --quiet
   
     - name: Test Software Kit for LLVM compilation on Ubuntu 20.04
+      env:
+          PULL_REPO: ${{ github.event.pull_request.head.repo.html_url }}
+          PUSH_REPO: ${{ github.repository }}
       run: |
-        [[ -n ${{ github.event.pull_request.head.repo.html_url }} ]]  || cm run script --tags=get,qaic,software,kit,_repo.https://github.com/${{ github.repository }},_branch.${{ github.ref_name }} --adr.compiler.tags=llvm --adr.compiler.version=${{ matrix.llvm-version }} --quiet
-        [[ -n ${{ github.repository }} ]] || cm run script --tags=get,qaic,software,kit,_repo.${{ github.event.pull_request.head.repo.html_url }},_branch.${{ github.event.pull_request.head.ref }} --adr.compiler.tags=llvm --adr.compiler.version=${{ matrix.llvm-version }} --quiet
+        [[ -n ${PULL_REPO} ]]  || cm run script --tags=get,qaic,software,kit,_repo.https://github.com/${{ github.repository }},_branch.${{ github.ref_name }} --adr.compiler.tags=llvm --adr.compiler.version=${{ matrix.llvm-version }} --quiet
+        [[ -n ${PUSH_REPO} ]] || cm run script --tags=get,qaic,software,kit,_repo.${{ github.event.pull_request.head.repo.html_url }},_branch.${{ github.event.pull_request.head.ref }} --adr.compiler.tags=llvm --adr.compiler.version=${{ matrix.llvm-version }} --quiet
            
     - name: Test Software Kit for GCC compilation on Ubuntu 20.04
       run: |
