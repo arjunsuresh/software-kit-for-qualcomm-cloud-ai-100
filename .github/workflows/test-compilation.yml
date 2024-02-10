@@ -57,6 +57,7 @@ jobs:
         python3 -m pip install cmind
         cm pull repo ctuning@mlcommons-ck
         cm run script --tags=get,sys-utils-cm --quiet
+        sudo apt remove -y gcc-13
   
     - name: Test Software Kit for LLVM compilation on Ubuntu 22.04
       run: |
