@@ -3,9 +3,6 @@ name: Test Compilation
 on:
   pull_request:
     branches: [ "main" ]
-  push:
-    branches: [ "main" ]
-
 
 jobs:
   build_ubuntu_20_04:
@@ -32,34 +29,7 @@ jobs:
   
     - name: Test Software Kit for LLVM compilation on Ubuntu 20.04
       run: |
-        cm run script --tags=get,qaic,software,kit,_repo.https://github.com/${{ github.repository }},_branch.${{ github.ref_name }} --adr.compiler.tags=llvm --adr.compiler.version=${{ matrix.llvm-version }} --quiet
-
-  build_ubuntu_22_04:  
-    runs-on: ubuntu-22.04
-    strategy:
-      fail-fast: false
-      matrix:
-        llvm-version: [ "14.0.0", "15.0.6", "16.0.4", "17.0.6" ]
-        exclude:
-          - llvm-version: 14.0.0
-          - llvm-version: 15.0.6
-          - llvm-version: 16.0.4
-          - llvm-version: 17.0.6
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python3 -m pip install cmind
-        cm pull repo ctuning@mlcommons-ck
-        cm run script --tags=get,sys-utils-cm --quiet
-        sudo apt remove -y gcc-13
-  
-    - name: Test Software Kit for LLVM compilation on Ubuntu 22.04
-      run: |
-        cm run script --tags=get,qaic,software,kit,_repo.https://github.com/${{ github.repository }},_branch.${{ github.ref_name }} --adr.compiler.tags=llvm --adr.compiler.version=${{ matrix.llvm-version }} --quiet
-
+        ${{ github.event.pull_request.head.repo.html_url }} || cm run script --tags=get,qaic,software,kit,_repo.https://github.com/${{ github.repository }},_branch.${{ github.ref_name }} --adr.compiler.tags=llvm --adr.compiler.version=${{ matrix.llvm-version }} --quiet
+        ${{ github.repository }} || cm run script --tags=get,qaic,software,kit,_repo.${{ github.event.pull_request.head.repo.html_url }},_branch.${{ github.event.pull_request.head.ref }} --adr.compiler.tags=llvm --adr.compiler.version=${{ matrix.llvm-version }} --quiet
+        ${{ github.event.pull_request.head.repo.html_url }} || cm run script --tags=get,qaic,software,kit,_repo.https://github.com/${{ github.repository }},_branch.${{ github.ref_name }} --adr.compiler.tags=gcc --quiet
+        ${{ github.repository }} || cm run script --tags=get,qaic,software,kit,_repo.${{ github.event.pull_request.head.repo.html_url }},_branch.${{ github.event.pull_request.head.ref }} --adr.compiler.tags=gcc --quiet
